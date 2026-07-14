@@ -137,7 +137,7 @@ if st.button("Fetch my projects & tasks"):
             # Build the editable entries grid, pre-populated, hours/date blank-ish
             entries = st.session_state.id_lookup_df.copy()
             entries["spent_date"] = date.today().isoformat()
-            entries["hours"] = None
+            entries["hours"] = pd.Series([float("nan")] * len(entries), dtype="float64")
             entries["notes"] = ""
             st.session_state.entries_df = entries[
                 ["client_name", "project_name", "task_name", "spent_date", "hours", "notes",
@@ -169,7 +169,7 @@ edited_df = st.data_editor(
         "project_name": st.column_config.TextColumn(disabled=True),
         "task_name": st.column_config.TextColumn(disabled=True),
         "spent_date": st.column_config.TextColumn(help="Format: YYYY-MM-DD"),
-        "hours": st.column_config.NumberColumn(min_value=0.0, step=0.25),
+        "hours": st.column_config.NumberColumn(min_value=0.0, max_value=24.0, step=0.01, format="%.2f"),
     },
     num_rows="fixed",
     use_container_width=True,
